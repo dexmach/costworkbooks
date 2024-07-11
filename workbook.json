@@ -1,0 +1,91 @@
+{
+    "version": "Notebook/1.0",
+    "items": [
+      {
+        "type": 9,
+        "content": {
+          "version": "KqlParameterItem/1.0",
+          "crossComponentResources": [
+            "value::tenant"
+          ],
+          "parameters": [
+            {
+              "id": "75a5bb7a-87fb-49e5-bfa6-b2ab81e31224",
+              "version": "KqlParameterItem/1.0",
+              "name": "managementgroup",
+              "type": 2,
+              "isRequired": true,
+              "query": "ResourceContainers\r\n| where type =~ 'microsoft.management/managementgroups'\r\n| project name",
+              "crossComponentResources": [
+                "value::tenant"
+              ],
+              "typeSettings": {
+                "additionalResourceOptions": [
+                  "value::1"
+                ],
+                "showDefault": false
+              },
+              "timeContext": {
+                "durationMs": 86400000
+              },
+              "queryType": 1,
+              "resourceType": "microsoft.resources/tenants",
+              "value": "value::1"
+            }
+          ],
+          "style": "pills",
+          "queryType": 1,
+          "resourceType": "microsoft.resources/tenants"
+        },
+        "name": "parameters - 2"
+      },
+      {
+        "type": 3,
+        "content": {
+          "version": "KqlItem/1.0",
+          "query": "Resources \r\n| where type has \"microsoft.compute/disks\" \r\n| extend diskState = tostring(properties.diskState) \r\n| where managedBy == \"\" \r\n| where not(name endswith \"-ASRReplica\" or name startswith \"asr\") ",
+          "size": 0,
+          "queryType": 1,
+          "resourceType": "microsoft.resourcegraph/resources",
+          "crossComponentResources": [
+            "value::all"
+          ]
+        },
+        "conditionalVisibility": {
+          "parameterName": "x",
+          "comparison": "isEqualTo",
+          "value": "0"
+        },
+        "name": "query - 0"
+      },
+      {
+        "type": 3,
+        "content": {
+          "version": "KqlItem/1.0",
+          "query": "{\"version\":\"ARMEndpoint/1.0\",\"data\":\"{\\r\\n    \\\"type\\\": \\\"Usage\\\",\\r\\n    \\\"timeframe\\\": \\\"MonthToDate\\\",\\r\\n    \\\"dataset\\\": {\\r\\n        \\\"granularity\\\": \\\"None\\\",\\r\\n        \\\"filter\\\": {\\r\\n            \\\"dimensions\\\": {\\r\\n                \\\"name\\\": \\\"resourceType\\\",\\r\\n                \\\"operator\\\": \\\"in\\\",\\r\\n                \\\"values\\\": [\\r\\n                    \\\"Microsoft.Compute/disks\\\"\\r\\n                ]\\r\\n            }\\r\\n        },\\r\\n        \\\"aggregation\\\": {\\r\\n            \\\"totalCost\\\": {\\r\\n                \\\"name\\\": \\\"PreTaxCost\\\",\\r\\n                \\\"function\\\": \\\"Sum\\\"\\r\\n            }\\r\\n        },\\r\\n        \\\"grouping\\\": [\\r\\n            {\\r\\n                \\\"type\\\": \\\"Dimension\\\",\\r\\n                \\\"name\\\": \\\"resourceId\\\"\\r\\n            }\\r\\n        ]\\r\\n    }\\r\\n}\",\"headers\":[],\"method\":\"POST\",\"path\":\"/providers/Microsoft.Management/managementGroups/{managementgroup}/providers/Microsoft.CostManagement/query?\",\"urlParams\":[{\"key\":\"api-version\",\"value\":\"2023-11-01\"}],\"batchDisabled\":false,\"transformers\":[{\"type\":\"jsonpath\",\"settings\":{\"tablePath\":\"$.properties\",\"columns\":[]}}]}",
+          "size": 0,
+          "queryType": 12
+        },
+        "conditionalVisibility": {
+          "parameterName": "x",
+          "comparison": "isEqualTo",
+          "value": "0"
+        },
+        "name": "query - 1"
+      },
+      {
+        "type": 3,
+        "content": {
+          "version": "KqlItem/1.0",
+          "query": "{\"version\":\"Merge/1.0\",\"merges\":[{\"id\":\"1acd7639-9b4a-4499-89a3-ee238ddc302c\",\"mergeType\":\"innerunique\",\"leftTable\":\"query - 0\",\"rightTable\":\"query - 1\",\"leftColumn\":\"id\",\"rightColumn\":\"resourceId\"}],\"projectRename\":[{\"originalName\":\"[query - 0].id\",\"mergedName\":\"id\",\"fromId\":\"1acd7639-9b4a-4499-89a3-ee238ddc302c\"},{\"originalName\":\"[query - 1].PreTaxCost\",\"mergedName\":\"PreTaxCost\",\"fromId\":\"1acd7639-9b4a-4499-89a3-ee238ddc302c\"},{\"originalName\":\"[query - 1].Currency\",\"mergedName\":\"Currency\",\"fromId\":\"1acd7639-9b4a-4499-89a3-ee238ddc302c\"},{\"originalName\":\"[query - 0].location\",\"mergedName\":\"location\",\"fromId\":\"1acd7639-9b4a-4499-89a3-ee238ddc302c\"},{\"originalName\":\"[query - 0].managedBy\",\"mergedName\":\"managedBy\",\"fromId\":\"1acd7639-9b4a-4499-89a3-ee238ddc302c\"},{\"originalName\":\"[query - 0].sku\",\"mergedName\":\"sku\",\"fromId\":\"1acd7639-9b4a-4499-89a3-ee238ddc302c\"},{\"originalName\":\"[query - 0].diskState\",\"mergedName\":\"diskState\",\"fromId\":\"1acd7639-9b4a-4499-89a3-ee238ddc302c\"},{\"originalName\":\"[query - 1].resourceId\",\"mergedName\":\"resourceId\",\"fromId\":\"1acd7639-9b4a-4499-89a3-ee238ddc302c\"},{\"originalName\":\"[query - 0].extendedLocation\"},{\"originalName\":\"[query - 0].zones\"},{\"originalName\":\"[query - 0].identity\"},{\"originalName\":\"[query - 0].tags\"},{\"originalName\":\"[query - 0].properties\"},{\"originalName\":\"[query - 0].subscriptionId\"},{\"originalName\":\"[query - 0].resourceGroup\"},{\"originalName\":\"[query - 0].kind\"},{\"originalName\":\"[query - 0].type\"},{\"originalName\":\"[query - 0].tenantId\"},{\"originalName\":\"[query - 0].plan\"},{\"originalName\":\"[query - 0].name\"}]}",
+          "size": 0,
+          "queryType": 7
+        },
+        "name": "query - 3"
+      }
+    ],
+    "fallbackResourceIds": [
+      "Azure Monitor"
+    ],
+    "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+  }
